@@ -1,8 +1,8 @@
 # SPPD Platform
 
-ETL platform for **Spanish Public Procurement Data (SPPD)**. Orchestrates Airflow 3.x, dbt, and DuckDB to ingest, convert, and load procurement records from Spain's open data sources into an analytical database.
+Data platform for **Spanish Public Procurement Data (SPPD)**. Orchestrates Airflow 3.x, dbt, and DuckDB to ingest, convert, and load procurement records from Spain's open data sources into an analytical database.
 
-## ETL flow
+## Data flow
 
 | Stage | Tool | Description |
 |-------|------|-------------|
