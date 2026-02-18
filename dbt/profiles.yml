@@ -1,0 +1,6 @@
+sppd:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: /opt/sppd/data/sppd.duckdb

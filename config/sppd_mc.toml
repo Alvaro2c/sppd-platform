@@ -1,0 +1,19 @@
+type = "minor-contracts"
+start = "202602"
+end = "202602"
+cleanup = true
+keep_cfs_raw_xml = false
+
+batch_size = 50
+read_concurrency = 4
+parser_threads = 2
+concat_batches = false
+max_retries = 5
+retry_initial_delay_ms = 1000
+retry_max_delay_ms = 10000
+concurrent_downloads = 4
+
+download_dir_mc = "/opt/sppd/data/downloads/mc"
+download_dir_pt = "/opt/sppd/data/downloads/pt"
+parquet_dir_mc = "/opt/sppd/data/parquet/mc"
+parquet_dir_pt = "/opt/sppd/data/parquet/pt"

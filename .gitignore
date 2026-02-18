@@ -1,0 +1,31 @@
+# Airflow
+airflow/logs/
+airflow/standalone_admin_password.txt
+airflow/airflow.db
+airflow/simple_auth_manager_passwords.json.generated
+airflow/airflow.cfg
+airflow/webserver_config.py
+airflow/*.pid
+airflow/*.err
+airflow/*.out
+
+# dbt
+dbt/logs/
+dbt/target/
+dbt/dbt_packages/
+dbt/.user.yml
+
+# Docker
+.env
+docker-compose.override.yml
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+*.egg-info/
+dist/
+build/

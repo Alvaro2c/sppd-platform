@@ -1,0 +1,58 @@
+# Airflow + dbt + DuckDB orchestrator
+# Airflow 3.x requires PostgreSQL for metadata database (SQLite migrations fail)
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: sppd-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-airflow}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-airflow}
+    volumes:
+      - sppd-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U airflow -d airflow"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  orchestrator:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: sppd-orchestrator
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ../airflow:/opt/sppd/airflow
+      - ../dbt:/opt/sppd/dbt
+      - ../config:/opt/sppd/config
+      - sppd-data:/opt/sppd/data
+    environment:
+      AIRFLOW_HOME: /opt/sppd/airflow
+      AIRFLOW__CORE__DAGS_FOLDER: /opt/sppd/airflow/dags
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__CORE__EXECUTOR: "LocalExecutor"
+      AIRFLOW__SCHEDULER__DAG_DIR_LIST_INTERVAL: "60"
+      AIRFLOW__SCHEDULER__PARSING_PROCESSES: "1"
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: "postgresql+psycopg2://${POSTGRES_USER:-airflow}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-airflow}"
+      AIRFLOW__API_AUTH__JWT_SECRET: "${AIRFLOW_JWT_SECRET}"
+      # LocalExecutor workers must reach the API server; use 127.0.0.1 to avoid IPv6 issues
+      AIRFLOW__API__BASE_URL: "http://127.0.0.1:8080"
+      DBT_PROJECT_DIR: /opt/sppd/dbt
+      DUCKDB_DATABASE: /opt/sppd/data/sppd.duckdb
+      DBT_SEND_ANONYMOUS_USAGE_STATS: "False"
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 2G
+
+volumes:
+  sppd-data:
+    driver: local
+  sppd-postgres-data:
+    driver: local

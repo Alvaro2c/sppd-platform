@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=65.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sppd-platform"
+version = "0.1.0"
+description = "SPPD: Spanish Public Procurement Data Platform"
+requires-python = ">=3.11"
+authors = [
+    {name = "Alvaro Carranza", email = "108229582+Alvaro2c@users.noreply.github.com"}
+]
+readme = "README.md"
+license = "MIT"
+
+dependencies = [
+    # Airflow orchestration (3.x requires PostgreSQL for metadata DB)
+    "apache-airflow>=3.1.0",
+    "flask-session==0.5.0",
+    "psycopg2-binary>=2.9.9",
+    "asyncpg>=0.30.0",
+
+    # dbt integration
+    "dbt-core==1.11.4",
+    "dbt-duckdb>=1.10.0",
+
+    # Data processing
+    "duckdb>=1.4.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "black>=23.7.0",
+    "ruff>=0.1.0",
+    "mypy>=1.4.0",
+]
+
+[tool.setuptools]
+packages = ["dbt"]
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+select = ["E", "F", "W", "I", "N"]
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
